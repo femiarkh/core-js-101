@@ -101,20 +101,16 @@ function getFastestPromise(array) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
-  // return Promise.allSettled(array)
-  //   .catch('Something went wrong')
-  //   .then((res) => res.reduce((acc, a) => {
-  //     acc.push(a.value);
-  //     return acc;
-  //   }, []))
-  //   .then((res) => res.reduce(action));
+function chainPromises(array, action) {
+  const output = [];
+  const promise = new Promise((resolve) => {
+    array.forEach((p) => {
+      p.then((res) => output.push(res), (rej) => rej);
+    });
+    resolve(output);
+  });
+  return promise.then((out) => out.reduce(action));
 }
-
-// const promises = [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)];
-// const p = chainPromises(promises, (a, b) => a + b);
-// p.then((res) => console.log(res));
 
 module.exports = {
   willYouMarryMe,
